@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { getParts, updatePartQuantity, addTransaction, fileToBase64, getCurrentUser, addRequest, savePart } from '../services/storage';
 import { Part, OutReason, TransactionType, Transaction, User, StockRequest } from '../types';
-import * as XLSX from 'xlsx';
 
 interface InventoryProps {
   onEdit?: (part: Part) => void;
@@ -28,9 +27,6 @@ export const Inventory: React.FC<InventoryProps> = ({ onEdit }) => {
   const [attachment, setAttachment] = useState<string | null>(null);
   const [attachmentName, setAttachmentName] = useState<string>('');
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Excel Import State
-  const excelInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setParts(getParts());
@@ -73,140 +69,6 @@ export const Inventory: React.FC<InventoryProps> = ({ onEdit }) => {
         alert("Erro ao processar arquivo.");
       }
     }
-  };
-
-  // Helper to find value in row regardless of case or accents
-  const getValue = (row: any, possibleKeys: string[]): string | undefined => {
-    const normalize = (str: string) => str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
-    
-    const rowKeys = Object.keys(row);
-    
-    for (const key of possibleKeys) {
-      const foundKey = rowKeys.find(k => normalize(k) === normalize(key));
-      if (foundKey && row[foundKey] !== undefined && row[foundKey] !== null) {
-        return String(row[foundKey]).trim();
-      }
-    }
-    return undefined;
-  };
-
-  const handleExcelImport = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = (evt) => {
-      try {
-        const data = evt.target?.result;
-        const wb = XLSX.read(data, { type: 'array' });
-        const wsname = wb.SheetNames[0];
-        const ws = wb.Sheets[wsname];
-        const jsonData = XLSX.utils.sheet_to_json(ws);
-
-        if (jsonData.length === 0) {
-          alert("A planilha parece estar vazia.");
-          return;
-        }
-
-        let importedCount = 0;
-        let updatedCount = 0;
-
-        // Process data
-        jsonData.forEach((row: any) => {
-           // Mapeamento específico solicitado:
-           // item, codigo, quantidade, sistema, localização, fabricante e equipamento
-           
-           const name = getValue(row, ['item', 'nome', 'peça', 'descrição']);
-           const sku = getValue(row, ['codigo', 'código', 'sku', 'part number']);
-           const qtyRaw = getValue(row, ['quantidade', 'qtd', 'estoque', 'saldo']);
-           const priceRaw = getValue(row, ['preco', 'preço', 'valor', 'price', 'custo', 'venda']);
-           
-           // Combine Sistema + Equipamento for Machine Model
-           const sistema = getValue(row, ['sistema', 'system']);
-           const equipamento = getValue(row, ['equipamento', 'equipment', 'maquina']);
-           let machineModel = 'Geral';
-           if (sistema && equipamento) machineModel = `${sistema} - ${equipamento}`;
-           else if (sistema) machineModel = sistema;
-           else if (equipamento) machineModel = equipamento;
-
-           const location = getValue(row, ['localização', 'localizacao', 'local']);
-           const fabricante = getValue(row, ['fabricante', 'marca', 'brand']);
-           
-           // Se tiver fabricante, adiciona na descrição
-           let description = name || '';
-           if (fabricante) {
-             description = `[Fab: ${fabricante}] ${description}`;
-           }
-           
-           const parsedPrice = priceRaw ? parseFloat(priceRaw.replace('R$', '').replace('.', '').replace(',', '.')) : 0;
-
-           if (sku && name) {
-             const existingPart = parts.find(p => p.sku === sku);
-             const qtyToAdd = parseInt(qtyRaw || '0') || 0;
-             const minQty = 5; // Default
-
-             if (existingPart) {
-                // Update existing
-                const updatedPart: Part = {
-                  ...existingPart,
-                  quantity: existingPart.quantity + qtyToAdd,
-                  machineModel: machineModel !== 'Geral' ? machineModel : existingPart.machineModel,
-                  description: description !== existingPart.name ? description : existingPart.description,
-                  location: location || existingPart.location,
-                  salePrice: parsedPrice || existingPart.salePrice,
-                  updatedAt: new Date().toISOString()
-                };
-                savePart(updatedPart);
-                updatedCount++;
-             } else {
-                // Create new
-                const newPart: Part = {
-                  id: crypto.randomUUID(),
-                  sku: String(sku).toUpperCase(),
-                  name: String(name),
-                  description: String(description),
-                  machineModel: String(machineModel),
-                  quantity: qtyToAdd,
-                  minQuantity: minQty,
-                  salePrice: parsedPrice || 0,
-                  location: String(location || ''),
-                  createdAt: new Date().toISOString(),
-                  updatedAt: new Date().toISOString()
-                };
-                savePart(newPart);
-                
-                // Add Initial Transaction
-                if (qtyToAdd > 0) {
-                  addTransaction({
-                    id: crypto.randomUUID(),
-                    partId: newPart.id,
-                    partName: newPart.name,
-                    partSku: newPart.sku,
-                    type: TransactionType.IN,
-                    quantity: qtyToAdd,
-                    reason: 'Compra Inicial (Importação Excel)',
-                    notes: 'Importado via planilha',
-                    date: new Date().toISOString(),
-                    requesterName: currentUser?.name
-                  });
-                }
-                importedCount++;
-             }
-           }
-        });
-        
-        setParts(getParts());
-        alert(`Processamento concluído!\n${importedCount} novos itens cadastrados.\n${updatedCount} itens atualizados (estoque somado).`);
-        
-      } catch (error) {
-        console.error("Excel Error:", error);
-        alert("Erro ao ler o arquivo Excel. Verifique se é um arquivo .xlsx válido.");
-      }
-      
-      // Reset input
-      if(excelInputRef.current) excelInputRef.current.value = '';
-    };
-    reader.readAsArrayBuffer(file);
   };
 
   const handleConfirmTransaction = () => {
@@ -278,24 +140,6 @@ export const Inventory: React.FC<InventoryProps> = ({ onEdit }) => {
         <h2 className="text-2xl font-bold text-black">Estoque de Peças</h2>
         <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto items-center">
           
-          {isAdmin && (
-            <>
-              <button 
-                onClick={() => excelInputRef.current?.click()}
-                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition-colors flex items-center whitespace-nowrap"
-              >
-                <i className="fas fa-file-excel mr-2"></i> Importar .xlsx
-              </button>
-              <input 
-                type="file" 
-                ref={excelInputRef}
-                onChange={handleExcelImport}
-                accept=".xlsx, .xls"
-                className="hidden"
-              />
-            </>
-          )}
-
           <select 
             value={selectedMachine} 
             onChange={(e) => setSelectedMachine(e.target.value)}
