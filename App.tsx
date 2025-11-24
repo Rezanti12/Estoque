@@ -74,7 +74,7 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50">
+    <div className="flex h-screen overflow-hidden bg-gray-900 text-white">
       <Sidebar 
         currentPage={currentPage} 
         onNavigate={handleNavigate} 
@@ -84,12 +84,12 @@ const App: React.FC = () => {
       />
       
       <main className="flex-1 overflow-y-auto w-full lg:ml-64">
-        <header className="bg-white border-b border-gray-200 sticky top-0 z-10 px-6 py-4 flex justify-between items-center shadow-sm lg:hidden">
-          <button onClick={() => setIsSidebarOpen(true)} className="text-gray-600 hover:text-blue-600">
+        <header className="bg-gray-800 border-b border-gray-700 sticky top-0 z-10 px-6 py-4 flex justify-between items-center shadow-sm lg:hidden">
+          <button onClick={() => setIsSidebarOpen(true)} className="text-gray-300 hover:text-blue-500">
             <i className="fas fa-bars text-xl"></i>
           </button>
-          <span className="font-bold text-black">Estoque de Manutenção</span>
-          <button onClick={handleLogout} className="text-gray-600 hover:text-red-500" title="Sair">
+          <span className="font-bold text-white">Estoque de Manutenção</span>
+          <button onClick={handleLogout} className="text-gray-300 hover:text-red-500" title="Sair">
             <i className="fas fa-sign-out-alt text-xl"></i>
           </button>
         </header>

@@ -144,23 +144,23 @@ export const AddPart: React.FC<AddPartProps> = ({ initialData, onSuccess }) => {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-black">
+        <h2 className="text-2xl font-bold text-white">
           {isEditing ? 'Editar Peça' : 'Cadastro de Nova Peça'}
         </h2>
         {isEditing && onSuccess && (
           <button 
             onClick={onSuccess}
-            className="text-gray-500 hover:text-gray-700 font-medium"
+            className="text-gray-400 hover:text-gray-200 font-medium"
           >
             Cancelar Edição
           </button>
         )}
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-gray-800 rounded-xl shadow-sm border border-gray-700 overflow-hidden">
         <form onSubmit={handleSubmit} className="p-6 md:p-8 space-y-6">
           
-          <div className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-300 rounded-xl bg-gray-50 transition-colors hover:bg-gray-100">
+          <div className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-600 rounded-xl bg-gray-700/50 transition-colors hover:bg-gray-700">
             {previewImage ? (
               <div className="relative w-full max-w-sm">
                 <img src={previewImage} alt="Preview" className="w-full h-64 object-contain rounded-lg" />
@@ -170,17 +170,17 @@ export const AddPart: React.FC<AddPartProps> = ({ initialData, onSuccess }) => {
                     setPreviewImage(null);
                     if(fileInputRef.current) fileInputRef.current.value = '';
                   }}
-                  className="absolute top-2 right-2 bg-red-500 text-white w-8 h-8 rounded-full shadow hover:bg-red-600 transition-colors"
+                  className="absolute top-2 right-2 bg-red-600 text-white w-8 h-8 rounded-full shadow hover:bg-red-700 transition-colors"
                 >
                   <i className="fas fa-times"></i>
                 </button>
               </div>
             ) : (
               <div className="text-center" onClick={() => fileInputRef.current?.click()}>
-                <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-3 cursor-pointer">
+                <div className="w-16 h-16 bg-blue-900/30 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-3 cursor-pointer">
                   <i className="fas fa-camera text-2xl"></i>
                 </div>
-                <p className="text-sm font-medium text-gray-700">Clique para {isEditing ? 'trocar' : 'adicionar'} foto</p>
+                <p className="text-sm font-medium text-gray-300">Clique para {isEditing ? 'trocar' : 'adicionar'} foto</p>
               </div>
             )}
             <input 
@@ -194,101 +194,101 @@ export const AddPart: React.FC<AddPartProps> = ({ initialData, onSuccess }) => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="col-span-1 md:col-span-2">
-              <label className="block text-sm font-medium text-black mb-1">Nome da Peça</label>
+              <label className="block text-sm font-medium text-gray-300 mb-1">Nome da Peça</label>
               <input 
                 type="text" 
                 required
                 value={formData.name}
                 onChange={e => setFormData({...formData, name: e.target.value})}
-                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-black bg-white"
+                className="w-full p-2 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-white bg-gray-700 placeholder-gray-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-black mb-1">SKU (Código)</label>
+              <label className="block text-sm font-medium text-gray-300 mb-1">SKU (Código)</label>
               <input 
                 type="text" 
                 required
                 value={formData.sku}
                 onChange={e => setFormData({...formData, sku: e.target.value.toUpperCase()})}
-                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none font-mono text-black bg-white"
+                className="w-full p-2 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none font-mono text-white bg-gray-700 placeholder-gray-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-black mb-1">Máquina Compatível</label>
+              <label className="block text-sm font-medium text-gray-300 mb-1">Máquina Compatível</label>
               <input 
                 type="text" 
                 value={formData.machineModel}
                 onChange={e => setFormData({...formData, machineModel: e.target.value})}
-                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-black bg-white"
+                className="w-full p-2 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-white bg-gray-700 placeholder-gray-500"
               />
             </div>
 
             <div className="col-span-1 md:col-span-2">
-              <label className="block text-sm font-medium text-black mb-1">Descrição</label>
+              <label className="block text-sm font-medium text-gray-300 mb-1">Descrição</label>
               <textarea 
                 value={formData.description}
                 onChange={e => setFormData({...formData, description: e.target.value})}
                 rows={3}
-                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none resize-none text-black bg-white"
+                className="w-full p-2 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none resize-none text-white bg-gray-700 placeholder-gray-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-black mb-1">Quantidade {isEditing ? '(Atual)' : 'Inicial'}</label>
+              <label className="block text-sm font-medium text-gray-300 mb-1">Quantidade {isEditing ? '(Atual)' : 'Inicial'}</label>
               <input 
                 type="number" 
                 min="0"
                 value={formData.quantity}
                 onChange={e => setFormData({...formData, quantity: parseInt(e.target.value) || 0})}
-                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-black bg-white"
+                className="w-full p-2 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-white bg-gray-700"
               />
-              {isEditing && <p className="text-xs text-orange-500 mt-1">Alterar isso irá gerar um "Ajuste de Estoque".</p>}
+              {isEditing && <p className="text-xs text-orange-400 mt-1">Alterar isso irá gerar um "Ajuste de Estoque".</p>}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-black mb-1">Valor de Venda (R$)</label>
+              <label className="block text-sm font-medium text-gray-300 mb-1">Valor de Venda (R$)</label>
               <div className="relative">
-                <span className="absolute left-3 top-2 text-gray-500">R$</span>
+                <span className="absolute left-3 top-2 text-gray-400">R$</span>
                 <input 
                   type="number" 
                   min="0"
                   step="0.01"
                   value={formData.salePrice}
                   onChange={e => setFormData({...formData, salePrice: parseFloat(e.target.value) || 0})}
-                  className="w-full pl-10 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-black bg-white"
+                  className="w-full pl-10 p-2 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-white bg-gray-700 placeholder-gray-500"
                   placeholder="0.00"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-black mb-1">Estoque Mínimo (Alerta)</label>
+              <label className="block text-sm font-medium text-gray-300 mb-1">Estoque Mínimo (Alerta)</label>
               <input 
                 type="number" 
                 min="0"
                 value={formData.minQuantity}
                 onChange={e => setFormData({...formData, minQuantity: parseInt(e.target.value) || 0})}
-                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-black bg-white"
+                className="w-full p-2 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-white bg-gray-700"
               />
             </div>
             
              <div>
-              <label className="block text-sm font-medium text-black mb-1">Localização (Opcional)</label>
+              <label className="block text-sm font-medium text-gray-300 mb-1">Localização (Opcional)</label>
               <input 
                 type="text" 
                 value={formData.location}
                 onChange={e => setFormData({...formData, location: e.target.value})}
-                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-black bg-white"
+                className="w-full p-2 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-white bg-gray-700 placeholder-gray-500"
               />
             </div>
           </div>
 
-          <div className="pt-4 border-t border-gray-100 flex justify-end">
+          <div className="pt-4 border-t border-gray-700 flex justify-end">
             <button 
               type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium shadow-lg shadow-blue-200 transition-all flex items-center"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium shadow-lg shadow-blue-900/50 transition-all flex items-center"
             >
               <i className="fas fa-save mr-2"></i>
               {isEditing ? 'Salvar Alterações' : 'Cadastrar Item'}
