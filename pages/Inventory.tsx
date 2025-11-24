@@ -16,6 +16,7 @@ export const Inventory: React.FC<InventoryProps> = ({ onEdit }) => {
   const [selectedPart, setSelectedPart] = useState<Part | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [transactionMode, setTransactionMode] = useState<'IN' | 'OUT'>('OUT');
+  const [isRequestMode, setIsRequestMode] = useState(false);
   
   // Form Fields
   const [qty, setQty] = useState<number>(1);
@@ -42,9 +43,10 @@ export const Inventory: React.FC<InventoryProps> = ({ onEdit }) => {
 
   const uniqueMachines = Array.from(new Set(parts.map(p => p.machineModel)));
 
-  const handleOpenModal = (part: Part, mode: 'IN' | 'OUT') => {
+  const handleOpenModal = (part: Part, mode: 'IN' | 'OUT', isRequest: boolean = false) => {
     setSelectedPart(part);
     setTransactionMode(mode);
+    setIsRequestMode(isRequest);
     setQty(1);
     setOutReason(OutReason.INTERNAL_MAINTENANCE);
     setNotes('');
@@ -79,8 +81,8 @@ export const Inventory: React.FC<InventoryProps> = ({ onEdit }) => {
       return;
     }
 
-    // --- TECHNICIAN FLOW: CREATE REQUEST ---
-    if (currentUser.role === 'TECNICO' && transactionMode === 'OUT') {
+    // --- TECHNICIAN FLOW OR REQUEST MODE: CREATE REQUEST ---
+    if ((currentUser.role === 'TECNICO' || isRequestMode) && transactionMode === 'OUT') {
        const request: StockRequest = {
          id: crypto.randomUUID(),
          partId: selectedPart.id,
@@ -96,7 +98,7 @@ export const Inventory: React.FC<InventoryProps> = ({ onEdit }) => {
          attachmentName: attachmentName || undefined
        };
        addRequest(request);
-       alert("Solicitação enviada para aprovação do Administrador.");
+       alert("Solicitação enviada para aprovação.");
        setIsModalOpen(false);
        return;
     }
@@ -228,11 +230,21 @@ export const Inventory: React.FC<InventoryProps> = ({ onEdit }) => {
                 )}
 
                 <button 
-                  onClick={() => handleOpenModal(part, 'OUT')}
+                  onClick={() => handleOpenModal(part, 'OUT', false)} // Baixa Direta
                   disabled={part.quantity === 0}
-                  className={`${isAdmin ? 'col-span-2' : 'col-span-4'} py-2 rounded-lg font-medium transition-colors text-sm flex items-center justify-center ${part.quantity === 0 ? 'bg-gray-700 text-gray-500 cursor-not-allowed' : (isAdmin ? 'bg-red-900/20 hover:bg-red-900/40 text-red-500 border border-red-900/30' : 'bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-900/50')}`}
+                  className={`col-span-1 py-2 rounded-lg font-medium transition-colors text-sm flex items-center justify-center ${part.quantity === 0 ? 'bg-gray-700 text-gray-500 cursor-not-allowed' : 'bg-red-900/20 hover:bg-red-900/40 text-red-500 border border-red-900/30'}`}
+                  title="Dar Baixa"
                 >
-                  {isAdmin ? <><i className="fas fa-minus mr-2"></i> Baixa</> : <><i className="fas fa-hand-holding-box mr-2"></i> Solicitar Peça</>}
+                  <i className="fas fa-minus"></i>
+                </button>
+
+                <button 
+                  onClick={() => handleOpenModal(part, 'OUT', true)} // Solicitar
+                  disabled={part.quantity === 0}
+                  className={`col-span-1 py-2 rounded-lg font-medium transition-colors text-sm flex items-center justify-center ${part.quantity === 0 ? 'bg-gray-700 text-gray-500 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white shadow-md shadow-blue-900/50'}`}
+                  title="Solicitar Peça"
+                >
+                   <i className="fas fa-hand-holding-box"></i>
                 </button>
               </div>
             </div>
@@ -252,8 +264,8 @@ export const Inventory: React.FC<InventoryProps> = ({ onEdit }) => {
             </button>
             
             <div className="mb-6">
-              <h3 className={`text-xl font-bold mb-1 ${transactionMode === 'IN' ? 'text-green-500' : isAdmin ? 'text-red-500' : 'text-blue-500'}`}>
-                {transactionMode === 'IN' ? 'Repor Estoque' : isAdmin ? 'Dar Baixa (Saída)' : 'Solicitar Peça'}
+              <h3 className={`text-xl font-bold mb-1 ${transactionMode === 'IN' ? 'text-green-500' : isRequestMode ? 'text-blue-500' : 'text-red-500'}`}>
+                {transactionMode === 'IN' ? 'Repor Estoque' : isRequestMode ? 'Solicitar Peça' : 'Dar Baixa (Saída)'}
               </h3>
               <p className="text-sm text-gray-400">{selectedPart.name} ({selectedPart.sku})</p>
             </div>
@@ -285,8 +297,8 @@ export const Inventory: React.FC<InventoryProps> = ({ onEdit }) => {
                 </div>
               </div>
 
-              {/* For Admin doing OUT: Reason Select. For Tech: Just text area for reason/notes */}
-              {transactionMode === 'OUT' && isAdmin && (
+              {/* Only show "Reason Select" if Admin doing direct OUT. If Request Mode, use text area only. */}
+              {transactionMode === 'OUT' && isAdmin && !isRequestMode && (
                 <>
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-1">Motivo da Baixa</label>
@@ -337,10 +349,10 @@ export const Inventory: React.FC<InventoryProps> = ({ onEdit }) => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-1">
-                  {isAdmin ? 'Observações' : 'Justificativa / Onde será usado'}
+                  {isRequestMode ? 'Justificativa da Solicitação' : isAdmin ? 'Observações' : 'Justificativa'}
                 </label>
                 <textarea 
-                  placeholder={isAdmin ? "Obs..." : "Explique para qual máquina/serviço..."}
+                  placeholder={isRequestMode ? "Explique por que precisa desta peça..." : "Obs..."}
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   className="w-full p-2 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none h-20 resize-none text-white bg-gray-700 placeholder-gray-500"
@@ -354,9 +366,10 @@ export const Inventory: React.FC<InventoryProps> = ({ onEdit }) => {
                 onClick={handleConfirmTransaction}
                 className={`flex-1 text-white py-2 rounded-lg font-medium shadow-md transition-colors 
                   ${transactionMode === 'IN' ? 'bg-green-600 hover:bg-green-700' : 
+                    isRequestMode ? 'bg-blue-600 hover:bg-blue-700' :
                     isAdmin ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-600 hover:bg-blue-700'}`}
               >
-                {transactionMode === 'IN' ? 'Confirmar Reposição' : isAdmin ? 'Confirmar Baixa' : 'Enviar Solicitação'}
+                {transactionMode === 'IN' ? 'Confirmar Reposição' : isRequestMode ? 'Enviar Solicitação' : 'Confirmar Baixa'}
               </button>
             </div>
           </div>
