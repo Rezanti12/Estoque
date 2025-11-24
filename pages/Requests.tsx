@@ -83,19 +83,19 @@ export const Requests: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-        <h2 className="text-2xl font-bold text-slate-800">
+        <h2 className="text-2xl font-bold text-black">
           {user?.role === 'ADMIN' ? 'Solicitações de Peças' : 'Minhas Solicitações'}
         </h2>
-        <div className="flex bg-slate-200 p-1 rounded-lg">
+        <div className="flex bg-gray-200 p-1 rounded-lg">
           <button 
             onClick={() => setFilter('PENDING')}
-            className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${filter === 'PENDING' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-600'}`}
+            className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${filter === 'PENDING' ? 'bg-white text-black shadow-sm' : 'text-gray-600'}`}
           >
             Pendentes
           </button>
           <button 
             onClick={() => setFilter('HISTORY')}
-            className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${filter === 'HISTORY' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-600'}`}
+            className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${filter === 'HISTORY' ? 'bg-white text-black shadow-sm' : 'text-gray-600'}`}
           >
             Histórico
           </button>
@@ -104,12 +104,12 @@ export const Requests: React.FC = () => {
 
       <div className="grid gap-4">
         {displayedRequests.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-xl border border-slate-100">
-            <p className="text-slate-400">Nenhuma solicitação encontrada nesta categoria.</p>
+          <div className="text-center py-12 bg-white rounded-xl border border-gray-200">
+            <p className="text-gray-400">Nenhuma solicitação encontrada nesta categoria.</p>
           </div>
         ) : (
           displayedRequests.map(req => (
-            <div key={req.id} className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex flex-col md:flex-row justify-between gap-4">
+            <div key={req.id} className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col md:flex-row justify-between gap-4">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
                   <span className={`px-2 py-1 text-xs font-bold rounded-full 
@@ -117,15 +117,15 @@ export const Requests: React.FC = () => {
                       req.status === 'APPROVED' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                     {req.status === 'PENDING' ? 'AGUARDANDO APROVAÇÃO' : req.status === 'APPROVED' ? 'APROVADO' : 'REJEITADO'}
                   </span>
-                  <span className="text-xs text-slate-400">{new Date(req.createdAt).toLocaleString()}</span>
+                  <span className="text-xs text-gray-400">{new Date(req.createdAt).toLocaleString()}</span>
                 </div>
                 
-                <h3 className="font-bold text-lg text-slate-800">{req.partName} <span className="text-slate-400 font-normal">({req.partSku})</span></h3>
+                <h3 className="font-bold text-lg text-black">{req.partName} <span className="text-gray-400 font-normal">({req.partSku})</span></h3>
                 
-                <div className="mt-2 text-sm text-slate-600 space-y-1">
-                  <p><i className="fas fa-user mr-2 text-slate-400"></i>Solicitante: <strong>{req.requesterName}</strong></p>
-                  <p><i className="fas fa-cubes mr-2 text-slate-400"></i>Quantidade: <strong>{req.quantity}</strong></p>
-                  <p><i className="fas fa-comment-alt mr-2 text-slate-400"></i>Motivo: {req.reason}</p>
+                <div className="mt-2 text-sm text-gray-600 space-y-1">
+                  <p><i className="fas fa-user mr-2 text-gray-400"></i>Solicitante: <strong>{req.requesterName}</strong></p>
+                  <p><i className="fas fa-cubes mr-2 text-gray-400"></i>Quantidade: <strong>{req.quantity}</strong></p>
+                  <p><i className="fas fa-comment-alt mr-2 text-gray-400"></i>Motivo: {req.reason}</p>
                 </div>
 
                 {req.attachmentUrl && (
@@ -139,7 +139,7 @@ export const Requests: React.FC = () => {
                 )}
 
                 {req.status !== 'PENDING' && (
-                  <div className="mt-3 pt-3 border-t border-slate-50 text-xs text-slate-500">
+                  <div className="mt-3 pt-3 border-t border-gray-50 text-xs text-gray-500">
                     {req.status === 'APPROVED' ? 'Aprovado' : 'Rejeitado'} por <strong>{req.reviewedBy}</strong> em {new Date(req.reviewedAt!).toLocaleString()}
                   </div>
                 )}

@@ -16,6 +16,9 @@ export const Dashboard: React.FC = () => {
   const totalQuantity = parts.reduce((acc, p) => acc + p.quantity, 0);
   const lowStock = parts.filter(p => p.quantity <= p.minQuantity).length;
   
+  // Calculate Total Inventory Value
+  const totalValue = parts.reduce((acc, p) => acc + ((p.salePrice || 0) * p.quantity), 0);
+
   // Recent transactions
   const recentTransactions = transactions.slice(0, 5);
 
@@ -30,63 +33,74 @@ export const Dashboard: React.FC = () => {
     .sort((a, b) => b.value - a.value)
     .slice(0, 5);
 
-  const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
+  const COLORS = ['#3b82f6', '#9333ea', '#000000', '#6b7280', '#2563eb'];
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-slate-800">Painel de Controle</h2>
+      <h2 className="text-2xl font-bold text-black">Painel de Controle</h2>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-center space-x-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex items-center space-x-4">
           <div className="p-4 bg-blue-100 text-blue-600 rounded-lg">
             <i className="fas fa-box text-2xl"></i>
           </div>
           <div>
-            <p className="text-sm text-slate-500 font-medium">Itens Cadastrados</p>
-            <h3 className="text-2xl font-bold text-slate-800">{totalItems}</h3>
-            <p className="text-xs text-slate-400">{totalQuantity} unidades totais</p>
+            <p className="text-sm text-gray-500 font-medium">Itens Cadastrados</p>
+            <h3 className="text-2xl font-bold text-black">{totalItems}</h3>
+            <p className="text-xs text-gray-400">{totalQuantity} unidades totais</p>
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-center space-x-4">
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex items-center space-x-4">
           <div className="p-4 bg-red-100 text-red-600 rounded-lg">
             <i className="fas fa-exclamation-triangle text-2xl"></i>
           </div>
           <div>
-            <p className="text-sm text-slate-500 font-medium">Estoque Baixo</p>
-            <h3 className="text-2xl font-bold text-slate-800">{lowStock}</h3>
-            <p className="text-xs text-slate-400">Itens precisam de reposição</p>
+            <p className="text-sm text-gray-500 font-medium">Estoque Baixo</p>
+            <h3 className="text-2xl font-bold text-black">{lowStock}</h3>
+            <p className="text-xs text-gray-400">Itens precisam de reposição</p>
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex items-center space-x-4">
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex items-center space-x-4">
           <div className="p-4 bg-green-100 text-green-600 rounded-lg">
             <i className="fas fa-exchange-alt text-2xl"></i>
           </div>
           <div>
-            <p className="text-sm text-slate-500 font-medium">Movimentações (Total)</p>
-            <h3 className="text-2xl font-bold text-slate-800">{transactions.length}</h3>
-            <p className="text-xs text-slate-400">Entradas e Saídas</p>
+            <p className="text-sm text-gray-500 font-medium">Movimentações</p>
+            <h3 className="text-2xl font-bold text-black">{transactions.length}</h3>
+            <p className="text-xs text-gray-400">Total acumulado</p>
+          </div>
+        </div>
+
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex items-center space-x-4">
+          <div className="p-4 bg-purple-100 text-purple-600 rounded-lg">
+            <i className="fas fa-dollar-sign text-2xl"></i>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500 font-medium">Valor Estimado</p>
+            <h3 className="text-xl font-bold text-black">R$ {totalValue.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h3>
+            <p className="text-xs text-gray-400">Total em estoque</p>
           </div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Activity */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-          <h3 className="text-lg font-semibold text-slate-800 mb-4">Movimentações Recentes</h3>
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+          <h3 className="text-lg font-semibold text-black mb-4">Movimentações Recentes</h3>
           <div className="space-y-4">
             {recentTransactions.length === 0 ? (
-              <p className="text-slate-400 text-sm">Nenhuma movimentação registrada.</p>
+              <p className="text-gray-400 text-sm">Nenhuma movimentação registrada.</p>
             ) : (
               recentTransactions.map(t => (
-                <div key={t.id} className="flex items-start justify-between border-b border-slate-50 pb-3 last:border-0 last:pb-0">
+                <div key={t.id} className="flex items-start justify-between border-b border-gray-100 pb-3 last:border-0 last:pb-0">
                   <div className="flex items-start space-x-3">
                     <div className={`w-2 h-2 mt-2 rounded-full ${t.type === TransactionType.IN ? 'bg-green-500' : 'bg-red-500'}`}></div>
                     <div>
-                      <p className="text-sm font-medium text-slate-700">{t.partName}</p>
-                      <p className="text-xs text-slate-500">{t.reason} - {new Date(t.date).toLocaleDateString()}</p>
+                      <p className="text-sm font-medium text-gray-700">{t.partName}</p>
+                      <p className="text-xs text-gray-500">{t.reason} - {new Date(t.date).toLocaleDateString()}</p>
                     </div>
                   </div>
                   <span className={`text-sm font-bold ${t.type === TransactionType.IN ? 'text-green-600' : 'text-red-600'}`}>
@@ -99,8 +113,8 @@ export const Dashboard: React.FC = () => {
         </div>
 
         {/* Chart */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-          <h3 className="text-lg font-semibold text-slate-800 mb-4">Distribuição por Máquina</h3>
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+          <h3 className="text-lg font-semibold text-black mb-4">Distribuição por Máquina</h3>
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -124,7 +138,7 @@ export const Dashboard: React.FC = () => {
           </div>
           <div className="flex flex-wrap gap-2 justify-center mt-2">
             {pieData.map((entry, index) => (
-               <div key={index} className="flex items-center text-xs text-slate-500">
+               <div key={index} className="flex items-center text-xs text-gray-500">
                  <span className="w-2 h-2 rounded-full mr-1" style={{backgroundColor: COLORS[index % COLORS.length]}}></span>
                  {entry.name}
                </div>

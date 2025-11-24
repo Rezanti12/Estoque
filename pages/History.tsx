@@ -33,24 +33,24 @@ export const History: React.FC = () => {
   return (
     <div className="space-y-6">
        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-        <h2 className="text-2xl font-bold text-slate-800">Histórico de Rastreabilidade</h2>
+        <h2 className="text-2xl font-bold text-black">Histórico de Rastreabilidade</h2>
         
         <div className="flex gap-2">
             <button 
                 onClick={() => setFilterType('ALL')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium ${filterType === 'ALL' ? 'bg-slate-800 text-white' : 'bg-white text-slate-600 border border-slate-300'}`}
+                className={`px-4 py-2 rounded-lg text-sm font-medium ${filterType === 'ALL' ? 'bg-black text-white' : 'bg-white text-gray-600 border border-gray-300'}`}
             >
                 Todos
             </button>
             <button 
                 onClick={() => setFilterType('IN')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium ${filterType === 'IN' ? 'bg-green-600 text-white' : 'bg-white text-slate-600 border border-slate-300'}`}
+                className={`px-4 py-2 rounded-lg text-sm font-medium ${filterType === 'IN' ? 'bg-green-600 text-white' : 'bg-white text-gray-600 border border-gray-300'}`}
             >
                 Entradas
             </button>
             <button 
                 onClick={() => setFilterType('OUT')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium ${filterType === 'OUT' ? 'bg-red-600 text-white' : 'bg-white text-slate-600 border border-slate-300'}`}
+                className={`px-4 py-2 rounded-lg text-sm font-medium ${filterType === 'OUT' ? 'bg-red-600 text-white' : 'bg-white text-gray-600 border border-gray-300'}`}
             >
                 Saídas
             </button>
@@ -58,33 +58,33 @@ export const History: React.FC = () => {
       </div>
 
       <div className="relative">
-         <i className="fas fa-search absolute left-3 top-3 text-slate-400"></i>
+         <i className="fas fa-search absolute left-3 top-3 text-gray-400"></i>
          <input 
            type="text" 
            placeholder="Buscar por peça, SKU ou motivo..." 
            value={searchTerm}
            onChange={(e) => setSearchTerm(e.target.value)}
-           className="pl-10 pr-4 py-2 border border-slate-300 rounded-lg w-full md:w-1/2 focus:ring-2 focus:ring-blue-500 outline-none bg-white"
+           className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg w-full md:w-1/2 focus:ring-2 focus:ring-blue-500 outline-none bg-white text-black"
          />
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="bg-slate-50 border-b border-slate-200">
+            <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Data</th>
-                <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Tipo</th>
-                <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Item (SKU)</th>
-                <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Motivo</th>
-                <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Qtd</th>
-                <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Obs / Anexo</th>
+                <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Data</th>
+                <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Tipo</th>
+                <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Item (SKU)</th>
+                <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Motivo</th>
+                <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Qtd</th>
+                <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Obs / Anexo</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-gray-100">
               {filtered.map(t => (
-                <tr key={t.id} className="hover:bg-slate-50 transition-colors">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
+                <tr key={t.id} className="hover:bg-gray-50 transition-colors">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                     {new Date(t.date).toLocaleString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -92,16 +92,16 @@ export const History: React.FC = () => {
                       {t.type}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-800">
-                    {t.partName} <span className="text-slate-400 font-normal">({t.partSku})</span>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-black">
+                    {t.partName} <span className="text-gray-400 font-normal">({t.partSku})</span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                     {t.reason}
                   </td>
                   <td className={`px-6 py-4 whitespace-nowrap text-sm font-bold ${t.type === TransactionType.IN ? 'text-green-600' : 'text-red-600'}`}>
                     {t.type === TransactionType.IN ? '+' : '-'}{t.quantity}
                   </td>
-                  <td className="px-6 py-4 text-sm text-slate-500">
+                  <td className="px-6 py-4 text-sm text-gray-500">
                     <div className="flex flex-col gap-1">
                       <span className="truncate max-w-xs">{t.notes || '-'}</span>
                       {t.attachmentUrl && (
@@ -120,7 +120,7 @@ export const History: React.FC = () => {
             </tbody>
           </table>
           {filtered.length === 0 && (
-             <div className="p-8 text-center text-slate-400">Nenhum registro encontrado.</div>
+             <div className="p-8 text-center text-gray-400">Nenhum registro encontrado.</div>
           )}
         </div>
       </div>

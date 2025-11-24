@@ -19,6 +19,7 @@ export interface Part {
   machineModel: string; // Machine this part belongs to
   quantity: number;
   minQuantity: number;
+  salePrice?: number; // Value in BRL
   imageUrl?: string;
   location?: string; // Shelf/Bin
   createdAt: string;

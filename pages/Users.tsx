@@ -84,7 +84,7 @@ export const Users: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-slate-800">Gerenciar Usuários</h2>
+        <h2 className="text-2xl font-bold text-black">Gerenciar Usuários</h2>
         <button 
           onClick={() => handleOpenModal()}
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium shadow-md transition-colors"
@@ -105,11 +105,11 @@ export const Users: React.FC = () => {
                       {pendingUsers.map(user => (
                           <tr key={user.id}>
                               <td className="px-6 py-4">
-                                  <p className="font-bold text-slate-800">{user.name}</p>
-                                  <p className="text-xs text-slate-500">@{user.username}</p>
+                                  <p className="font-bold text-black">{user.name}</p>
+                                  <p className="text-xs text-gray-500">@{user.username}</p>
                               </td>
                               <td className="px-6 py-4">
-                                  <span className="text-xs uppercase font-bold text-slate-400">Solicitou: TÉCNICO</span>
+                                  <span className="text-xs uppercase font-bold text-gray-400">Solicitou: TÉCNICO</span>
                               </td>
                               <td className="px-6 py-4 text-right">
                                   <button onClick={() => handleApprove(user)} className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm font-medium mr-2">
@@ -127,22 +127,22 @@ export const Users: React.FC = () => {
       )}
 
       {/* ACTIVE USERS LIST */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <table className="w-full text-left">
-          <thead className="bg-slate-50 border-b border-slate-200">
+          <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
-              <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Nome</th>
-              <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Usuário (Login)</th>
-              <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Função</th>
-              <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase">Status</th>
-              <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase text-right">Ações</th>
+              <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase">Nome</th>
+              <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase">Usuário (Login)</th>
+              <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase">Função</th>
+              <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase">Status</th>
+              <th className="px-6 py-4 text-xs font-semibold text-gray-500 uppercase text-right">Ações</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-gray-100">
             {activeUsers.map(user => (
-              <tr key={user.id} className="hover:bg-slate-50">
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-800">{user.name}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-600">{user.username}</td>
+              <tr key={user.id} className="hover:bg-gray-50">
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-black">{user.name}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{user.username}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className={`px-2 py-1 text-xs font-bold rounded-full ${user.role === 'ADMIN' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'}`}>
                     {user.role}
@@ -175,44 +175,44 @@ export const Users: React.FC = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsModalOpen(false)}></div>
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-md z-10 p-6 relative animate-fade-in-up">
-            <h3 className="text-xl font-bold mb-4 text-slate-800">{editingId ? 'Editar Usuário' : 'Novo Usuário'}</h3>
+            <h3 className="text-xl font-bold mb-4 text-black">{editingId ? 'Editar Usuário' : 'Novo Usuário'}</h3>
             <form onSubmit={handleSave} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Nome Completo</label>
+                <label className="block text-sm font-medium text-black mb-1">Nome Completo</label>
                 <input 
                   type="text" 
                   value={formData.name}
                   onChange={e => setFormData({...formData, name: e.target.value})}
-                  className="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-black bg-white"
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Nome de Usuário (Login)</label>
+                <label className="block text-sm font-medium text-black mb-1">Nome de Usuário (Login)</label>
                 <input 
                   type="text" 
                   value={formData.username}
                   onChange={e => setFormData({...formData, username: e.target.value})}
-                  className="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-black bg-white"
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Senha</label>
+                <label className="block text-sm font-medium text-black mb-1">Senha</label>
                 <input 
                   type="text" 
                   value={formData.password}
                   onChange={e => setFormData({...formData, password: e.target.value})}
-                  className="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-black bg-white"
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Função</label>
+                <label className="block text-sm font-medium text-black mb-1">Função</label>
                 <select 
                   value={formData.role}
                   onChange={e => setFormData({...formData, role: e.target.value as UserRole})}
-                  className="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-black bg-white"
                 >
                   <option value="TECNICO">Técnico</option>
                   <option value="ADMIN">Administrador</option>
@@ -220,11 +220,11 @@ export const Users: React.FC = () => {
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Status</label>
+                <label className="block text-sm font-medium text-black mb-1">Status</label>
                 <select 
                   value={formData.status}
                   onChange={e => setFormData({...formData, status: e.target.value as UserStatus})}
-                  className="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-black bg-white"
                 >
                   <option value="ACTIVE">Ativo</option>
                   <option value="BLOCKED">Bloqueado</option>
@@ -236,7 +236,7 @@ export const Users: React.FC = () => {
                 <button 
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="flex-1 py-2 text-slate-600 hover:bg-slate-50 rounded-lg"
+                  className="flex-1 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
                 >
                   Cancelar
                 </button>

@@ -7,7 +7,7 @@ import { AddPart } from './pages/AddPart';
 import { History } from './pages/History';
 import { Users } from './pages/Users';
 import { Requests } from './pages/Requests';
-import { getCurrentUser, initializeUsers } from './services/storage';
+import { getCurrentUser, initializeUsers, logout } from './services/storage';
 import { Part, User } from './types';
 
 const App: React.FC = () => {
@@ -30,6 +30,7 @@ const App: React.FC = () => {
   };
 
   const handleLogout = () => {
+    logout();
     setCurrentUser(null);
     setCurrentPage('dashboard');
   };
@@ -73,7 +74,7 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-slate-100">
+    <div className="flex h-screen overflow-hidden bg-gray-50">
       <Sidebar 
         currentPage={currentPage} 
         onNavigate={handleNavigate} 
@@ -83,12 +84,14 @@ const App: React.FC = () => {
       />
       
       <main className="flex-1 overflow-y-auto w-full lg:ml-64">
-        <header className="bg-white border-b border-slate-200 sticky top-0 z-10 px-6 py-4 flex justify-between items-center shadow-sm lg:hidden">
-          <button onClick={() => setIsSidebarOpen(true)} className="text-slate-600 hover:text-blue-600">
+        <header className="bg-white border-b border-gray-200 sticky top-0 z-10 px-6 py-4 flex justify-between items-center shadow-sm lg:hidden">
+          <button onClick={() => setIsSidebarOpen(true)} className="text-gray-600 hover:text-blue-600">
             <i className="fas fa-bars text-xl"></i>
           </button>
-          <span className="font-bold text-slate-800">ManutStock Pro</span>
-          <div className="w-6"></div> 
+          <span className="font-bold text-black">Estoque de Manutenção</span>
+          <button onClick={handleLogout} className="text-gray-600 hover:text-red-500" title="Sair">
+            <i className="fas fa-sign-out-alt text-xl"></i>
+          </button>
         </header>
 
         <div className="p-6 md:p-8 max-w-7xl mx-auto min-h-full">
