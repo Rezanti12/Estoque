@@ -1,0 +1,7 @@
+{
+  "name": "Copy of Copy of ManutStock Pro",
+  "description": "Sistema inteligente de controle de estoque para peças de manutenção com rastreabilidade completa e assistência por IA.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
